@@ -28,6 +28,10 @@
             --x: 45deg;
         }
 
+        :root {
+            --c: 180;
+        }
+
         .container {
             padding: 20px;
         }
@@ -76,16 +80,16 @@
             border: 3px solid #fff;
             font-size: x-large;
             cursor: pointer;
-            background: linear-gradient(var(--x), rgba(0, 255, 255, 0.445), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(0, 255, 255, 0.484));
+            background: linear-gradient(var(--x), hsla(var(--c), 100%, 50%, 0.5), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), hsla(var(--c), 100%, 50%, 0.5));
             clip-path: polygon(100% 100%, 0 100%, 15% 0, 85% 0);
             transition: all 0.5s ease, background-color 2s, border-color 2s;
         }
 
         .planet-tab.active {
             display: inline-block;
-            background: linear-gradient(var(--x), rgb(0, 17, 255), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgb(0, 34, 255));
+            background: linear-gradient(var(--x), hsla(calc(var(--c) + 180), 100%, 50%, 0.5), rgba(255, 255, 255, 0), hsla(calc(var(--c) + 180), 100%, 50%, 0.5));
             transform: scale(0.8);
-            clip-path: polygon(100% 0, 0 0, 15% 100%, 85% 100%);
+            clip-path: polygon(85% 100%, 15% 100%, 0 0, 100% 0);
         }
 
         .planet-details {
@@ -165,7 +169,7 @@
             position: absolute;
             width: 12px;
             height: 12px;
-            background: white;
+            background: rgb(255, 255, 255);
             box-shadow: 0 0 15px white, 0 0 25px white, 0 0 35px white;
             border-radius: 50%;
             opacity: 0.8;
@@ -212,7 +216,7 @@
             }
 
             100% {
-                transform: scale(2);
+                transform: scale(10);
                 opacity: 0;
             }
         }
@@ -225,12 +229,22 @@
             background: rgba(17, 0, 255, 0);
             border-radius: 10px;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
         }
 
         #myRange {
             width: 100%;
             border-radius: 10px;
             cursor: pointer;
+        }
+
+        #myColour {
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+            accent-color: hsl(var(--c), 100%, 50%);
         }
 
         .slider-button {
@@ -240,10 +254,67 @@
             width: 135px;
             height: 21px;
             padding: 5px;
-            background: rgba(17, 0, 255, 0.5);
+            background: rgba(0, 0, 255, 0.5);
             filter: blur(5px);
             border-radius: 10px;
             cursor: pointer;
+        }
+
+        .colour-slider-button {
+            position: absolute;
+            top: 87px;
+            right: 28px;
+            width: 135px;
+            height: 21px;
+            padding: 5px;
+            background: hsla(var(--c), 100%, 50%, 0.5);
+            filter: blur(5px);
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .shape-buttons {
+            position: absolute;
+            top: 70px;
+            left: 90px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+
+            button {
+                max-width: 120px;
+                width: 60px;
+                height: 30px;
+                padding: 5px 15px;
+                transform: translate(-50px);
+                z-index: 999;
+                cursor: pointer;
+                background: rgba(0, 0, 0, 0.218);
+                border: 3px solid #ffffff;
+                color: #fff;
+                filter: blur(1px);
+            }
+        }
+
+        .prlgram {
+            clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%);
+        }
+
+        .opp-prlgram {
+            clip-path: polygon(0 0, 85% 0, 100% 100%, 15% 100%);
+        }
+
+        .trapezium {
+            clip-path: polygon(100% 100%, 0 100%, 15% 0, 85% 0);
+        }
+
+        .opp-trapezium {
+            clip-path: polygon(85% 100%, 15% 100%, 0 0, 100% 0);
+        }
+
+        .rectangle {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
         }
     </style>
 </head>
@@ -260,8 +331,17 @@
     <div class="meteor"></div>
     <div class="meteor"></div>
     <div class="slider-button"></div>
+    <div class="colour-slider-button"></div>
     <div id="slider">
-        <input type="range" min="0.1" max="5" value="1.5" class="slider" id="myRange" title="Customize meteor speed">
+        <input type="range" min="0.1" max="5.1" value="1.5" class="slider" id="myRange" title="Customize meteor speed">
+        <input type="range" min="0" max="360" value="180" class="slider" id="myColour" title="Customize button colour">
+    </div>
+    <div class="shape-buttons">
+        <button class="prlgram"></button>
+        <button class="opp-prlgram"></button>
+        <button class="trapezium"></button>
+        <button class="opp-trapezium"></button>
+        <button class="rectangle"></button>
     </div>
     <div class="container">
         <h1 class="heading">OUR SOLAR SYSTEM</h1>
@@ -281,7 +361,13 @@
             <div class="planet-details">
                 <h1 id="planet-title">EARTH</h1>
                 <div class="planet-description" id="planet-description">
-                    Earth is the third planet from the Sun and the only known planet to support life. It has a diverse environment with oceans, continents, and a variety of ecosystems. Earth's atmosphere, composed primarily of nitrogen and oxygen, protects life by blocking harmful solar radiation and moderating temperatures. The planet has a magnetic field generated by its iron core, shielding it from solar winds. Earth orbits the Sun in about 365.25 days and rotates on its axis every 24 hours. It has one natural satellite, the Moon, which influences tides and stabilizes the planet's axial tilt, contributing to a stable climate.
+                    Earth is the third planet from the Sun and the only known planet to support life. It has a diverse
+                    environment with oceans, continents, and a variety of ecosystems. Earth's atmosphere, composed
+                    primarily of nitrogen and oxygen, protects life by blocking harmful solar radiation and moderating
+                    temperatures. The planet has a magnetic field generated by its iron core, shielding it from solar
+                    winds. Earth orbits the Sun in about 365.25 days and rotates on its axis every 24 hours. It has one
+                    natural satellite, the Moon, which influences tides and stabilizes the planet's axial tilt,
+                    contributing to a stable climate.
                 </div>
             </div>
         </div>
@@ -344,6 +430,122 @@
             });
         });
 
+        const parallelogram = document.querySelector('.prlgram');
+        parallelogram.addEventListener('click', () => {
+            const planetTabs = document.querySelectorAll('.planet-tab');
+            const activeTab = document.querySelector('.planet-tab.active');
+            const shapeButton = document.querySelectorAll('.shape-buttons button');
+            shapeButton.forEach(button => {
+                button.classList.remove('clicked');
+            });
+            parallelogram.classList.add('clicked');
+            planetTabs.forEach(tab => {
+                if (tab === activeTab) {
+                    tab.style.clipPath = 'polygon(100% 100%, 15% 100%, 0 0, 85% 0)';
+                } else {
+                    tab.style.clipPath = 'polygon(85% 100%, 0 100%, 15% 0, 100% 0)';
+                }
+            });
+        });
+
+        const oppositeParallelogram = document.querySelector('.opp-prlgram');
+        oppositeParallelogram.addEventListener('click', () => {
+            const planetTabs = document.querySelectorAll('.planet-tab');
+            const activeTab = document.querySelector('.planet-tab.active');
+            const shapeButton = document.querySelectorAll('.shape-buttons button');
+            shapeButton.forEach(button => {
+                button.classList.remove('clicked');
+            });
+            oppositeParallelogram.classList.add('clicked');
+            planetTabs.forEach(tab => {
+                if (tab === activeTab) {
+                    tab.style.clipPath = 'polygon(85% 100%, 0 100%, 15% 0, 100% 0)';
+                } else {
+                    tab.style.clipPath = 'polygon(100% 100%, 15% 100%, 0 0, 85% 0)';
+                }
+            });
+        });
+
+        const trapezium = document.querySelector('.trapezium');
+        trapezium.addEventListener('click', () => {
+            const planetTabs = document.querySelectorAll('.planet-tab');
+            const activeTab = document.querySelector('.planet-tab.active');
+            const shapeButton = document.querySelectorAll('.shape-buttons button');
+            shapeButton.forEach(button => {
+                button.classList.remove('clicked');
+            });
+            trapezium.classList.add('clicked');
+            planetTabs.forEach(tab => {
+                if (tab === activeTab) {
+                    tab.style.clipPath = 'polygon(85% 100%, 15% 100%, 0 0, 100% 0)';
+                } else {
+                    tab.style.clipPath = 'polygon(100% 100%, 0 100%, 15% 0, 85% 0)';
+                }
+            });
+        });
+
+        const oppositeTrapezium = document.querySelector('.opp-trapezium');
+        oppositeTrapezium.addEventListener('click', () => {
+            const planetTabs = document.querySelectorAll('.planet-tab');
+            const activeTab = document.querySelector('.planet-tab.active');
+            const shapeButton = document.querySelectorAll('.shape-buttons button');
+            shapeButton.forEach(button => {
+                button.classList.remove('clicked');
+            });
+            oppositeTrapezium.classList.add('clicked');
+            planetTabs.forEach(tab => {
+                if (tab === activeTab) {
+                    tab.style.clipPath = 'polygon(100% 100%, 0 100%, 15% 0, 85% 0)';
+                } else {
+                    tab.style.clipPath = 'polygon(85% 100%, 15% 100%, 0 0, 100% 0)';
+                }
+            });
+        });
+
+        const rectangle = document.querySelector('.rectangle');
+        rectangle.addEventListener('click', () => {
+            const planetTabs = document.querySelectorAll('.planet-tab');
+            const activeTab = document.querySelector('.planet-tab.active');
+            const shapeButton = document.querySelectorAll('.shape-buttons button');
+            shapeButton.forEach(button => {
+                button.classList.remove('clicked');
+            });
+            rectangle.classList.add('clicked');
+            planetTabs.forEach(tab => {
+                tab.style.clipPath = 'polygon(100% 100%, 0 100%, 0 0, 100% 0)';
+            });
+        });
+
+        function updateShape() {
+            const shapeButton = document.querySelectorAll('.shape-buttons button');
+            const planetTabs = document.querySelectorAll('.planet-tab');
+            const activeTab = document.querySelector('.planet-tab.active');
+            shapeButton.forEach(button => {
+                if(button.classList.contains('clicked')) {
+                    planetTabs.forEach(tab => {
+                        if (tab === activeTab) {
+                            tab.style.clipPath = button.classList.contains('prlgram') ? 'polygon(100% 100%, 15% 100%, 0 0, 85% 0)' :
+                                button.classList.contains('opp-prlgram') ? 'polygon(85% 100%, 0 100%, 15% 0, 100% 0)' :
+                                button.classList.contains('trapezium') ? 'polygon(85% 100%, 15% 100%, 0 0, 100% 0)' :
+                                button.classList.contains('opp-trapezium') ? 'polygon(100% 100%, 0 100%, 15% 0, 85% 0)' :
+                                'polygon(100% 100%, 0 100%, 0 0, 100% 0)';
+                        } else {
+                            tab.style.clipPath = button.classList.contains('prlgram') ? 'polygon(85% 100%, 0 100%, 15% 0, 100% 0)' :
+                                button.classList.contains('opp-prlgram') ? 'polygon(100% 100%, 15% 100%, 0 0, 85% 0)' :
+                                button.classList.contains('trapezium') ? 'polygon(100% 100%, 0 100%, 15% 0, 85% 0)' :
+                                button.classList.contains('opp-trapezium') ? 'polygon(85% 100%, 15% 100%, 0 0, 100% 0)' :
+                                'polygon(100% 100%, 0 100%, 0 0, 100% 0)';
+                        }
+                    });
+                }
+            });
+        }
+
+        const colourPicker = document.getElementById('myColour');
+        colourPicker.addEventListener('input', () => {
+            document.body.style.setProperty('--c', colourPicker.value);
+        });
+
         const planetTitle = document.getElementById('planet-title');
         planetTitle.addEventListener('mouseover', () => {
             planetTitle.style.transition = 'letter-spacing 0.5s ease, opacity 1s ease, transform 1s ease';
@@ -368,6 +570,7 @@
                 planetImage.classList.add('active');
                 tabs.forEach(tab => tab.classList.remove('active'));
                 document.querySelector(`.planet-tab[onclick="showPlanet('${planetKey}')"]`).classList.add('active');
+                updateShape();
             }, 500);
 
             const planetDescription = document.getElementById('planet-description');
@@ -404,9 +607,11 @@
         });
         document.querySelectorAll('.meteor').forEach(meteor => {
             meteor.addEventListener('click', () => {
-                meteor.style.animation = 'explode 0.5s forwards';
+                meteor.style.opacity = 0;
+                meteor.style.transition = 'opacity 0.5s ease';
                 setTimeout(() => {
                     meteor.style.animation = 'none';
+                    meteor.style.opacity = 0.8;
                     meteor.style.left = Math.random() * (2 * window.innerWidth) + 'px';
                     meteor.style.top = -100 + 'px';
                     animateMeteor(meteor);
