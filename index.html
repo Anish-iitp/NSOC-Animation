@@ -379,8 +379,8 @@
     </span>
     <div class="secret-message">
         <h1>Did you know ?</h1>
-        <p>You can click on meteors to make them disappear. And if you managed to click 10 meteors within 30 seconds, you can get a free coffee :)<p style="font-size
-: 10px;">You will get automatically notified if you have clicked on 10 meteors within 30 seconds.</p></p>
+        <p>You can click on meteors to make them disappear. And if you managed to click 15 meteors within 30 seconds, you can get a free coffee :)<p style="font-size
+: 10px;">You will get automatically notified if you have clicked on 15 meteors within 30 seconds.</p></p>
         <p style="transform: translateY(-13px);">😉☕</p>
     </div>
     <div class="container">
@@ -647,9 +647,9 @@
         });
         const meteorClickedTime = [];
         function checkMeteorClicked() {
-            if (meteorClickedTime.length >= 10) {
+            if (meteorClickedTime.length >= 15) {
                 const currentTime = new Date().getTime();
-                const lastFiveClicked = meteorClickedTime.slice(-10);
+                const lastFiveClicked = meteorClickedTime.slice(-15);
                 const lastClickedTime = lastFiveClicked[0];
                 if (currentTime - lastClickedTime <= 30000) {
                     alert('You can have a free coffee now ☕.');
