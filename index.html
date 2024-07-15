@@ -316,6 +316,37 @@
         .rectangle {
             clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
         }
+
+        .secret {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 50px;
+            cursor: pointer;
+            color: blue;
+            text-shadow: 0 0 10px rgb(0, 106, 255), 0 0 10px rgb(54, 96, 236);
+        }
+
+        .secret-message {
+            height: fit-content;
+            width: 500px;
+            position: absolute;
+            bottom: -42px;
+            right: -197px;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.814);
+            border-radius: 10px;
+            opacity: 0;
+            scale: 0;
+            transition: all 0.5 ease;
+        }
+
+        .secret:hover+.secret-message {
+            opacity: 1;
+            scale: 1;
+            transition: all 0.2s ease;
+        }
     </style>
 </head>
 
@@ -342,6 +373,14 @@
         <button class="trapezium"></button>
         <button class="opp-trapezium"></button>
         <button class="rectangle"></button>
+    </div>
+    <span class="secret">
+        ??
+    </span>
+    <div class="secret-message">
+        <h1>Did you know ?</h1>
+        <p>You can click on meteors to make them disappear. And if you managed to click 5 meteors within 30 seconds, you can get a free coffee.</p>
+        <p style="transform: translateY(-13px);">😉☕</p>
     </div>
     <div class="container">
         <h1 class="heading">OUR SOLAR SYSTEM</h1>
@@ -605,8 +644,22 @@
                 }, value * 1800 / 1.5);
             }
         });
+        const meteorClickedTime = [];
+        function checkMeteorClicked() {
+            if (meteorClickedTime.length >= 5) {
+                const currentTime = new Date().getTime();
+                const lastFiveClicked = meteorClickedTime.slice(-5);
+                const lastClickedTime = lastFiveClicked[0];
+                if (currentTime - lastClickedTime <= 30000) {
+                    alert('You can have a free coffee now ☕.');
+                    meteorClickedTime.length = 0;
+                }
+            }
+        }
         document.querySelectorAll('.meteor').forEach(meteor => {
             meteor.addEventListener('click', () => {
+                meteorClickedTime.push(new Date().getTime());
+                checkMeteorClicked();
                 meteor.style.opacity = 0;
                 meteor.style.transition = 'opacity 0.5s ease';
                 setTimeout(() => {
